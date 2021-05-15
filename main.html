@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h3>坎公船长积分计算</h3>
+<p id="t"></p>
+<p>现在有多少积分</p>
+<input id="d0" value="0">
+<p>到27号还有几个周六周日</p>
+<input id="d5" value="4">
+<p>能三星的裂痕等级</p>
+<select id="i1">
+  <option value="0">50</option>
+  <option value="1">60</option>
+  <option value="2">70</option>
+</select>
+<p>附加的百分比（输入小数）如110%，则输入1.1</p>
+<input id="d8" value="0.6">
+<p>准备总共买几次挑战卷</p>
+<input id="d11" value="0">
+<p>准备总共买几次体力</p>
+<input id="d13" value="0">(可选：每天购买体力次数<input id="i2" value="0">)
+<p>现在剩余体力或其他任务中能未领取的体力（如购买了咖啡包，可在这里手动加上）</p>
+<input id="d19" value="0">
+
+<p><input type="checkbox" id="i3" checked="true">今天的5次裂隙、角斗场、多人已做完？</p>
+<p id="log">结果</p>
+<button onclick="demo()">点我</button>
+
+<script>
+var d1=new Date();
+var d2=new Date("2021/05/27 14:00:00");
+var d3=parseInt((d2-d1)/1000/60); //剩余分钟数
+var d4=d2.getDate()-d1.getDate() //剩余天数
+document.getElementById("t").innerHTML = "【"+new Date()+"】活动剩余天数"+d4;
+i2.onchange= function (){document.getElementById("d13").value = document.getElementById("i2").value*d4}
+function demo() {
+if(document.getElementById("i3").checked == false){ //今天的5次裂隙、角斗场、多人竞技是否做完？
+   d4 = d2.getDate()-d1.getDate()+1
+}else{
+   d4 = d2.getDate()-d1.getDate()
+}
+var d0=Number(document.getElementById("d0").value);//现在有多少分
+var d5=Number(document.getElementById("d5").value) //其中有几个周六周末
+var d6=d3/10+d4*110+d5*20 //剩余能获得到的体力（两次邮件领取，和每日任务10体力）
+var d7=[400,420,440] //50,60,70等级三星的基础积分（选择）
+var i1=Number(document.getElementById("i1").value) //选择60级
+var d8=Number(document.getElementById("d8").value) //附加的百分比（输入）
+var d9=d7[i1]*(1+d8)-100//刷实际刷活动裂隙多出的分数
+var d10=parseInt(d6/10)*100+d4*d9*5+d4*9*60+d4*60*5 //零钻全勤能获得的分数（角斗场我按照打9次，多人5次算的）
+var d11=Number(document.getElementById("d11").value) //准备买几次挑战卷
+var d12=d11*d9*5 //买挑战卷后多出的积分
+var d13=Number(document.getElementById("d13").value) //准备买几次体力
+var d14=d13*50/10*100 //买体力后多出的积分
+var d19=Number(document.getElementById("d19").value) //现在剩余体力或其他任务中能未领取的体力
+console.log(document.getElementById("i3").checked)
+
+var d20=parseInt(d19/10)*100 //多余体力能获得的积分
+var d15=d0+d10+d12+d14+d20 //总分数
+var d16=0 //需要花费钻石数
+var d17=parseInt(d13/d4)
+var d18=d13%d4
+switch(d17) {
+     case 0:
+        d16=d13*100
+        break;
+     case 1:
+        d16=d13*100+d18*50
+        break;
+     case 2:
+        d16=d13*100+d18*100+d4*50
+        break;
+     case 3:
+        d16=d13*100+d18*150+d4*50+d4*100
+        break;
+     case 4:
+        d16=d13*100+d18*200+d4*50+d4*100+d4*150
+        break;
+     default:
+        alert("没有那么多体力可以买");
+        break;
+} 
+if(d11>d4){
+    alert("没有那么多天数来买兑换卷了");
+}
+d16 = d16+d11*300
+
+console.log("最后能获得积分",d15,"要花费钻石数",d16);
+document.getElementById("log").innerHTML = "最后能获得积分:<br/>"+d15+"<br/>要花费钻石数:<br/>"+d16;
+if(d18>0){
+document.getElementById("log").innerHTML+="<br/><br/>前"+d18+"天每天购买体力"+(d17+1)+"次"
+}
+if(d17>0){
+document.getElementById("log").innerHTML+="<br/>剩余"+(d4-d18)+"天，每天购买"+(d17)+"次体力，建议这样分配以花费最少钻石"
+}
+
+}
+
+</script>
+
+</body>
+</html>
